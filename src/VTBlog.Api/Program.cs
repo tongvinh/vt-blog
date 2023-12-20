@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using VTBlog.Api;
 using VTBlog.Core.Domain.Identity;
+using VTBlog.Core.Models.Content;
 using VTBlog.Core.SeedWorks;
 using VTBlog.Data;
 using VTBlog.Data.Repositories;
@@ -61,6 +62,8 @@ foreach (var service in services)
     }
 }
 
+
+builder.Services.AddAutoMapper(typeof(PostInListDto));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
