@@ -32,29 +32,5 @@ namespace VTBlog.Data
                 .HasKey(x => new {x.UserId});
         }
 
-        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())
-        {
-            var entries = ChangeTracker
-                .Entries()
-                .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
-
-            foreach (var entityEntry in entries)
-            {
-                var dateCreateProp = entityEntry.Entity.GetType().GetProperty("DateCreated");
-                if (entityEntry.State == EntityState.Added && dateCreateProp != null)
-                {
-                    dateCreateProp.SetValue(entityEntry.Entity, DateTime.Now);
-                }
-
-                var modifiedDateProp = entityEntry.Entity.GetType().GetProperty("ModifiedDate");
-                if (entityEntry.State == EntityState.Modified
-                    && modifiedDateProp != null)
-                {
-                    modifiedDateProp.SetValue(entityEntry.Entity,DateTime.Now);
-                }
-            }
-
-            return base.SaveChangesAsync(cancellationToken);
-        }
     }
 }
