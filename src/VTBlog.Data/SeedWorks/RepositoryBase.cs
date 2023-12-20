@@ -12,6 +12,7 @@ namespace VTBlog.Data.SeedWorks
     public class RepositoryBase<T, TKey>(VTBlogContext context) : IRepository<T, TKey> where T : class
     {
         private readonly DbSet<T> _dbSet = context.Set<T>();
+        protected readonly VTBlogContext _context = context;
 
         public void Add(T entity)
         {
