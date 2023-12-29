@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using VTBlog.Api;
+using VTBlog.Api.Filter;
 using VTBlog.Api.Services;
 using VTBlog.Core.ConfigOptions;
 using VTBlog.Core.Domain.Identity;
