@@ -6,7 +6,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "coreui-free-angular-admin-template": {
+    "vt-blog-admin-ui": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -23,7 +23,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/coreui-free-angular-admin-template",
+            "outputPath": "dist/vt-blog-admin-ui",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -46,8 +46,7 @@
           },
           "configurations": {
             "production": {
-              "budgets": [
-                {
+              "budgets": [{
                   "type": "initial",
                   "maximumWarning": "1500kb",
                   "maximumError": "6mb"
@@ -58,7 +57,12 @@
                   "maximumError": "4kb"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "fileReplacements": [{
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ]
             },
             "development": {
               "buildOptimizer": false,
@@ -75,10 +79,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "coreui-free-angular-admin-template:build:production"
+              "browserTarget": "vt-blog-admin-ui:build:production"
             },
             "development": {
-              "browserTarget": "coreui-free-angular-admin-template:build:development"
+              "browserTarget": "vt-blog-admin-ui:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -86,7 +90,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "coreui-free-angular-admin-template:build"
+            "browserTarget": "vt-blog-admin-ui:build"
           }
         },
         "test": {
