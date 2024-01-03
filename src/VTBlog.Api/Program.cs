@@ -17,9 +17,15 @@ using VTBlog.Data.SeedWorks;
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("DefaultConnection");
+var VTCorsPolicy = "VTCorsPolicy";
 
-// Add services to the container.
-
+builder.Services.AddCors(o => o.AddPolicy(VTCorsPolicy, builder =>
+{
+    builder.AllowAnyHeader()
+        .AllowAnyMethod()
+        .WithOrigins(configuration["AllowedOrigins"])
+        .AllowCredentials();
+}));
 
 //Config DB Context and ASP.NET Core Identity
 builder.Services.AddDbContext<VTBlogContext>(options => options.UseSqlServer(connectionString));
@@ -107,6 +113,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseCors(VTCorsPolicy);
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

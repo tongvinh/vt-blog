@@ -59,10 +59,9 @@
               ],
               "outputHashing": "all",
               "fileReplacements": [{
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ]
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.prod.ts"
+              }]
             },
             "development": {
               "buildOptimizer": false,
@@ -79,10 +78,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "vt-blog-admin-ui:build:production"
+              "buildTarget": "vt-blog-admin-ui:build:production"
             },
             "development": {
-              "browserTarget": "vt-blog-admin-ui:build:development"
+              "buildTarget": "vt-blog-admin-ui:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -90,7 +89,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "vt-blog-admin-ui:build"
+            "buildTarget": "vt-blog-admin-ui:build"
           }
         },
         "test": {
@@ -108,6 +107,8 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
+              "node_modules/primeng/resources/primeng.min.css",
               "src/scss/styles.scss"
             ],
             "scripts": []
