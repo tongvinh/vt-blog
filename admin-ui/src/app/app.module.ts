@@ -41,8 +41,9 @@ import { ADMIN_API_BASE_URL, AdminApiAuthApiClient } from './api/admin-api.servi
 import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
-import { AlertService } from './shared/alert.service';
-import {ToastModule} from 'primeng/toast'
+import { AlertService } from './shared/services/alert.service';
+import { ToastModule } from 'primeng/toast'
+import { TokenStorageService } from './shared/services/token-storage.service';
 
 const APP_CONTAINERS = [
   DefaultFooterComponent,
@@ -83,7 +84,7 @@ const APP_CONTAINERS = [
     HttpClientModule
   ],
   providers: [
-    { provide: ADMIN_API_BASE_URL, useValue:environment.API_URL},
+    { provide: ADMIN_API_BASE_URL, useValue: environment.API_URL },
     {
       provide: LocationStrategy,
       useClass: HashLocationStrategy
@@ -92,7 +93,8 @@ const APP_CONTAINERS = [
     Title,
     MessageService,
     AlertService,
-    AdminApiAuthApiClient
+    AdminApiAuthApiClient,
+    TokenStorageService
   ],
   bootstrap: [AppComponent]
 })
