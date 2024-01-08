@@ -373,6 +373,224 @@ export class AdminApiPostApiClient {
     }
 }
 
+@Injectable()
+export class AdminApiTestApiClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(ADMIN_API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @return Success
+     */
+    testAuthen(): Observable<void> {
+        let url_ = this.baseUrl + "/api/Test";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTestAuthen(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTestAuthen(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processTestAuthen(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+@Injectable()
+export class AdminApiTokenApiClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(ADMIN_API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    refresh(body?: TokenRequest | undefined): Observable<AuthenticationResult> {
+        let url_ = this.baseUrl + "/api/admin/token/refresh";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRefresh(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRefresh(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<AuthenticationResult>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<AuthenticationResult>;
+        }));
+    }
+
+    protected processRefresh(response: HttpResponseBase): Observable<AuthenticationResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AuthenticationResult.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return Success
+     */
+    revoke(): Observable<void> {
+        let url_ = this.baseUrl + "/api/admin/token/revoke";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRevoke(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRevoke(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processRevoke(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
+export class AccountId implements IAccountId {
+    identifier?: string | undefined;
+    objectId?: string | undefined;
+    tenantId?: string | undefined;
+
+    constructor(data?: IAccountId) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.identifier = _data["identifier"];
+            this.objectId = _data["objectId"];
+            this.tenantId = _data["tenantId"];
+        }
+    }
+
+    static fromJS(data: any): AccountId {
+        data = typeof data === 'object' ? data : {};
+        let result = new AccountId();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["identifier"] = this.identifier;
+        data["objectId"] = this.objectId;
+        data["tenantId"] = this.tenantId;
+        return data;
+    }
+}
+
+export interface IAccountId {
+    identifier?: string | undefined;
+    objectId?: string | undefined;
+    tenantId?: string | undefined;
+}
+
 export class AuthenticatedResult implements IAuthenticatedResult {
     token?: string | undefined;
     refreshToken?: string | undefined;
@@ -411,6 +629,386 @@ export class AuthenticatedResult implements IAuthenticatedResult {
 export interface IAuthenticatedResult {
     token?: string | undefined;
     refreshToken?: string | undefined;
+}
+
+export class AuthenticationResult implements IAuthenticationResult {
+    accessToken?: string | undefined;
+    isExtendedLifeTimeToken?: boolean;
+    uniqueId?: string | undefined;
+    expiresOn?: Date;
+    extendedExpiresOn?: Date;
+    tenantId?: string | undefined;
+    account?: IAccount;
+    idToken?: string | undefined;
+    scopes?: string[] | undefined;
+    correlationId?: string;
+    tokenType?: string | undefined;
+    spaAuthCode?: string | undefined;
+    claimsPrincipal?: ClaimsPrincipal;
+    authenticationResultMetadata?: AuthenticationResultMetadata;
+    user?: IUser;
+
+    constructor(data?: IAuthenticationResult) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.accessToken = _data["accessToken"];
+            this.isExtendedLifeTimeToken = _data["isExtendedLifeTimeToken"];
+            this.uniqueId = _data["uniqueId"];
+            this.expiresOn = _data["expiresOn"] ? new Date(_data["expiresOn"].toString()) : <any>undefined;
+            this.extendedExpiresOn = _data["extendedExpiresOn"] ? new Date(_data["extendedExpiresOn"].toString()) : <any>undefined;
+            this.tenantId = _data["tenantId"];
+            this.account = _data["account"] ? IAccount.fromJS(_data["account"]) : <any>undefined;
+            this.idToken = _data["idToken"];
+            if (Array.isArray(_data["scopes"])) {
+                this.scopes = [] as any;
+                for (let item of _data["scopes"])
+                    this.scopes!.push(item);
+            }
+            this.correlationId = _data["correlationId"];
+            this.tokenType = _data["tokenType"];
+            this.spaAuthCode = _data["spaAuthCode"];
+            this.claimsPrincipal = _data["claimsPrincipal"] ? ClaimsPrincipal.fromJS(_data["claimsPrincipal"]) : <any>undefined;
+            this.authenticationResultMetadata = _data["authenticationResultMetadata"] ? AuthenticationResultMetadata.fromJS(_data["authenticationResultMetadata"]) : <any>undefined;
+            this.user = _data["user"] ? IUser.fromJS(_data["user"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuthenticationResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuthenticationResult();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["accessToken"] = this.accessToken;
+        data["isExtendedLifeTimeToken"] = this.isExtendedLifeTimeToken;
+        data["uniqueId"] = this.uniqueId;
+        data["expiresOn"] = this.expiresOn ? this.expiresOn.toISOString() : <any>undefined;
+        data["extendedExpiresOn"] = this.extendedExpiresOn ? this.extendedExpiresOn.toISOString() : <any>undefined;
+        data["tenantId"] = this.tenantId;
+        data["account"] = this.account ? this.account.toJSON() : <any>undefined;
+        data["idToken"] = this.idToken;
+        if (Array.isArray(this.scopes)) {
+            data["scopes"] = [];
+            for (let item of this.scopes)
+                data["scopes"].push(item);
+        }
+        data["correlationId"] = this.correlationId;
+        data["tokenType"] = this.tokenType;
+        data["spaAuthCode"] = this.spaAuthCode;
+        data["claimsPrincipal"] = this.claimsPrincipal ? this.claimsPrincipal.toJSON() : <any>undefined;
+        data["authenticationResultMetadata"] = this.authenticationResultMetadata ? this.authenticationResultMetadata.toJSON() : <any>undefined;
+        data["user"] = this.user ? this.user.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IAuthenticationResult {
+    accessToken?: string | undefined;
+    isExtendedLifeTimeToken?: boolean;
+    uniqueId?: string | undefined;
+    expiresOn?: Date;
+    extendedExpiresOn?: Date;
+    tenantId?: string | undefined;
+    account?: IAccount;
+    idToken?: string | undefined;
+    scopes?: string[] | undefined;
+    correlationId?: string;
+    tokenType?: string | undefined;
+    spaAuthCode?: string | undefined;
+    claimsPrincipal?: ClaimsPrincipal;
+    authenticationResultMetadata?: AuthenticationResultMetadata;
+    user?: IUser;
+}
+
+export class AuthenticationResultMetadata implements IAuthenticationResultMetadata {
+    tokenSource?: TokenSource;
+    tokenEndpoint?: string | undefined;
+    durationTotalInMs?: number;
+    durationInCacheInMs?: number;
+    durationInHttpInMs?: number;
+    refreshOn?: Date | undefined;
+    cacheRefreshReason?: CacheRefreshReason;
+    regionDetails?: RegionDetails;
+
+    constructor(data?: IAuthenticationResultMetadata) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.tokenSource = _data["tokenSource"];
+            this.tokenEndpoint = _data["tokenEndpoint"];
+            this.durationTotalInMs = _data["durationTotalInMs"];
+            this.durationInCacheInMs = _data["durationInCacheInMs"];
+            this.durationInHttpInMs = _data["durationInHttpInMs"];
+            this.refreshOn = _data["refreshOn"] ? new Date(_data["refreshOn"].toString()) : <any>undefined;
+            this.cacheRefreshReason = _data["cacheRefreshReason"];
+            this.regionDetails = _data["regionDetails"] ? RegionDetails.fromJS(_data["regionDetails"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): AuthenticationResultMetadata {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuthenticationResultMetadata();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["tokenSource"] = this.tokenSource;
+        data["tokenEndpoint"] = this.tokenEndpoint;
+        data["durationTotalInMs"] = this.durationTotalInMs;
+        data["durationInCacheInMs"] = this.durationInCacheInMs;
+        data["durationInHttpInMs"] = this.durationInHttpInMs;
+        data["refreshOn"] = this.refreshOn ? this.refreshOn.toISOString() : <any>undefined;
+        data["cacheRefreshReason"] = this.cacheRefreshReason;
+        data["regionDetails"] = this.regionDetails ? this.regionDetails.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IAuthenticationResultMetadata {
+    tokenSource?: TokenSource;
+    tokenEndpoint?: string | undefined;
+    durationTotalInMs?: number;
+    durationInCacheInMs?: number;
+    durationInHttpInMs?: number;
+    refreshOn?: Date | undefined;
+    cacheRefreshReason?: CacheRefreshReason;
+    regionDetails?: RegionDetails;
+}
+
+export enum CacheRefreshReason {
+    _0 = 0,
+    _1 = 1,
+    _2 = 2,
+    _3 = 3,
+    _4 = 4,
+}
+
+export class Claim implements IClaim {
+    readonly issuer?: string | undefined;
+    readonly originalIssuer?: string | undefined;
+    readonly properties?: { [key: string]: string; } | undefined;
+    subject?: ClaimsIdentity;
+    readonly type?: string | undefined;
+    readonly value?: string | undefined;
+    readonly valueType?: string | undefined;
+
+    constructor(data?: IClaim) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            (<any>this).issuer = _data["issuer"];
+            (<any>this).originalIssuer = _data["originalIssuer"];
+            if (_data["properties"]) {
+                (<any>this).properties = {} as any;
+                for (let key in _data["properties"]) {
+                    if (_data["properties"].hasOwnProperty(key))
+                        (<any>(<any>this).properties)![key] = _data["properties"][key];
+                }
+            }
+            this.subject = _data["subject"] ? ClaimsIdentity.fromJS(_data["subject"]) : <any>undefined;
+            (<any>this).type = _data["type"];
+            (<any>this).value = _data["value"];
+            (<any>this).valueType = _data["valueType"];
+        }
+    }
+
+    static fromJS(data: any): Claim {
+        data = typeof data === 'object' ? data : {};
+        let result = new Claim();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["issuer"] = this.issuer;
+        data["originalIssuer"] = this.originalIssuer;
+        if (this.properties) {
+            data["properties"] = {};
+            for (let key in this.properties) {
+                if (this.properties.hasOwnProperty(key))
+                    (<any>data["properties"])[key] = (<any>this.properties)[key];
+            }
+        }
+        data["subject"] = this.subject ? this.subject.toJSON() : <any>undefined;
+        data["type"] = this.type;
+        data["value"] = this.value;
+        data["valueType"] = this.valueType;
+        return data;
+    }
+}
+
+export interface IClaim {
+    issuer?: string | undefined;
+    originalIssuer?: string | undefined;
+    properties?: { [key: string]: string; } | undefined;
+    subject?: ClaimsIdentity;
+    type?: string | undefined;
+    value?: string | undefined;
+    valueType?: string | undefined;
+}
+
+export class ClaimsIdentity implements IClaimsIdentity {
+    readonly authenticationType?: string | undefined;
+    readonly isAuthenticated?: boolean;
+    actor?: ClaimsIdentity;
+    bootstrapContext?: any | undefined;
+    readonly claims?: Claim[] | undefined;
+    label?: string | undefined;
+    readonly name?: string | undefined;
+    readonly nameClaimType?: string | undefined;
+    readonly roleClaimType?: string | undefined;
+
+    constructor(data?: IClaimsIdentity) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            (<any>this).authenticationType = _data["authenticationType"];
+            (<any>this).isAuthenticated = _data["isAuthenticated"];
+            this.actor = _data["actor"] ? ClaimsIdentity.fromJS(_data["actor"]) : <any>undefined;
+            this.bootstrapContext = _data["bootstrapContext"];
+            if (Array.isArray(_data["claims"])) {
+                (<any>this).claims = [] as any;
+                for (let item of _data["claims"])
+                    (<any>this).claims!.push(Claim.fromJS(item));
+            }
+            this.label = _data["label"];
+            (<any>this).name = _data["name"];
+            (<any>this).nameClaimType = _data["nameClaimType"];
+            (<any>this).roleClaimType = _data["roleClaimType"];
+        }
+    }
+
+    static fromJS(data: any): ClaimsIdentity {
+        data = typeof data === 'object' ? data : {};
+        let result = new ClaimsIdentity();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["authenticationType"] = this.authenticationType;
+        data["isAuthenticated"] = this.isAuthenticated;
+        data["actor"] = this.actor ? this.actor.toJSON() : <any>undefined;
+        data["bootstrapContext"] = this.bootstrapContext;
+        if (Array.isArray(this.claims)) {
+            data["claims"] = [];
+            for (let item of this.claims)
+                data["claims"].push(item.toJSON());
+        }
+        data["label"] = this.label;
+        data["name"] = this.name;
+        data["nameClaimType"] = this.nameClaimType;
+        data["roleClaimType"] = this.roleClaimType;
+        return data;
+    }
+}
+
+export interface IClaimsIdentity {
+    authenticationType?: string | undefined;
+    isAuthenticated?: boolean;
+    actor?: ClaimsIdentity;
+    bootstrapContext?: any | undefined;
+    claims?: Claim[] | undefined;
+    label?: string | undefined;
+    name?: string | undefined;
+    nameClaimType?: string | undefined;
+    roleClaimType?: string | undefined;
+}
+
+export class ClaimsPrincipal implements IClaimsPrincipal {
+    readonly claims?: Claim[] | undefined;
+    readonly identities?: ClaimsIdentity[] | undefined;
+    identity?: IIdentity;
+
+    constructor(data?: IClaimsPrincipal) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["claims"])) {
+                (<any>this).claims = [] as any;
+                for (let item of _data["claims"])
+                    (<any>this).claims!.push(Claim.fromJS(item));
+            }
+            if (Array.isArray(_data["identities"])) {
+                (<any>this).identities = [] as any;
+                for (let item of _data["identities"])
+                    (<any>this).identities!.push(ClaimsIdentity.fromJS(item));
+            }
+            this.identity = _data["identity"] ? IIdentity.fromJS(_data["identity"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ClaimsPrincipal {
+        data = typeof data === 'object' ? data : {};
+        let result = new ClaimsPrincipal();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.claims)) {
+            data["claims"] = [];
+            for (let item of this.claims)
+                data["claims"].push(item.toJSON());
+        }
+        if (Array.isArray(this.identities)) {
+            data["identities"] = [];
+            for (let item of this.identities)
+                data["identities"].push(item.toJSON());
+        }
+        data["identity"] = this.identity ? this.identity.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IClaimsPrincipal {
+    claims?: Claim[] | undefined;
+    identities?: ClaimsIdentity[] | undefined;
+    identity?: IIdentity;
 }
 
 export class CreateUpdatePostRequest implements ICreateUpdatePostRequest {
@@ -479,6 +1077,142 @@ export interface ICreateUpdatePostRequest {
     source?: string | undefined;
     tags?: string | undefined;
     seoDescription?: string | undefined;
+}
+
+export class IAccount implements IIAccount {
+    readonly username?: string | undefined;
+    readonly environment?: string | undefined;
+    homeAccountId?: AccountId;
+
+    constructor(data?: IIAccount) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            (<any>this).username = _data["username"];
+            (<any>this).environment = _data["environment"];
+            this.homeAccountId = _data["homeAccountId"] ? AccountId.fromJS(_data["homeAccountId"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): IAccount {
+        data = typeof data === 'object' ? data : {};
+        let result = new IAccount();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["username"] = this.username;
+        data["environment"] = this.environment;
+        data["homeAccountId"] = this.homeAccountId ? this.homeAccountId.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IIAccount {
+    username?: string | undefined;
+    environment?: string | undefined;
+    homeAccountId?: AccountId;
+}
+
+export class IIdentity implements IIIdentity {
+    readonly name?: string | undefined;
+    readonly authenticationType?: string | undefined;
+    readonly isAuthenticated?: boolean;
+
+    constructor(data?: IIIdentity) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            (<any>this).name = _data["name"];
+            (<any>this).authenticationType = _data["authenticationType"];
+            (<any>this).isAuthenticated = _data["isAuthenticated"];
+        }
+    }
+
+    static fromJS(data: any): IIdentity {
+        data = typeof data === 'object' ? data : {};
+        let result = new IIdentity();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["authenticationType"] = this.authenticationType;
+        data["isAuthenticated"] = this.isAuthenticated;
+        return data;
+    }
+}
+
+export interface IIIdentity {
+    name?: string | undefined;
+    authenticationType?: string | undefined;
+    isAuthenticated?: boolean;
+}
+
+export class IUser implements IIUser {
+    readonly displayableId?: string | undefined;
+    readonly name?: string | undefined;
+    readonly identityProvider?: string | undefined;
+    readonly identifier?: string | undefined;
+
+    constructor(data?: IIUser) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            (<any>this).displayableId = _data["displayableId"];
+            (<any>this).name = _data["name"];
+            (<any>this).identityProvider = _data["identityProvider"];
+            (<any>this).identifier = _data["identifier"];
+        }
+    }
+
+    static fromJS(data: any): IUser {
+        data = typeof data === 'object' ? data : {};
+        let result = new IUser();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["displayableId"] = this.displayableId;
+        data["name"] = this.name;
+        data["identityProvider"] = this.identityProvider;
+        data["identifier"] = this.identifier;
+        return data;
+    }
+}
+
+export interface IIUser {
+    displayableId?: string | undefined;
+    name?: string | undefined;
+    identityProvider?: string | undefined;
+    identifier?: string | undefined;
 }
 
 export class LoginRequest implements ILoginRequest {
@@ -760,6 +1494,105 @@ export enum PostStatus {
     _4 = 4,
     _5 = 5,
     _6 = 6,
+}
+
+export class RegionDetails implements IRegionDetails {
+    regionOutcome?: RegionOutcome;
+    regionUsed?: string | undefined;
+    autoDetectionError?: string | undefined;
+
+    constructor(data?: IRegionDetails) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.regionOutcome = _data["regionOutcome"];
+            this.regionUsed = _data["regionUsed"];
+            this.autoDetectionError = _data["autoDetectionError"];
+        }
+    }
+
+    static fromJS(data: any): RegionDetails {
+        data = typeof data === 'object' ? data : {};
+        let result = new RegionDetails();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["regionOutcome"] = this.regionOutcome;
+        data["regionUsed"] = this.regionUsed;
+        data["autoDetectionError"] = this.autoDetectionError;
+        return data;
+    }
+}
+
+export interface IRegionDetails {
+    regionOutcome?: RegionOutcome;
+    regionUsed?: string | undefined;
+    autoDetectionError?: string | undefined;
+}
+
+export enum RegionOutcome {
+    _0 = 0,
+    _1 = 1,
+    _2 = 2,
+    _3 = 3,
+    _4 = 4,
+    _5 = 5,
+}
+
+export class TokenRequest implements ITokenRequest {
+    accessToken?: string | undefined;
+    refreshToken?: string | undefined;
+
+    constructor(data?: ITokenRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.accessToken = _data["accessToken"];
+            this.refreshToken = _data["refreshToken"];
+        }
+    }
+
+    static fromJS(data: any): TokenRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new TokenRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["accessToken"] = this.accessToken;
+        data["refreshToken"] = this.refreshToken;
+        return data;
+    }
+}
+
+export interface ITokenRequest {
+    accessToken?: string | undefined;
+    refreshToken?: string | undefined;
+}
+
+export enum TokenSource {
+    _0 = 0,
+    _1 = 1,
+    _2 = 2,
 }
 
 export class SwaggerException extends Error {
