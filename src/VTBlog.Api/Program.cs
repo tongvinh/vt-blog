@@ -1,12 +1,14 @@
 using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using VTBlog.Api;
+using VTBlog.Api.Authorization;
 using VTBlog.Api.Filter;
 using VTBlog.Api.Services;
 using VTBlog.Core.ConfigOptions;
@@ -21,6 +23,9 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("DefaultConnection");
 var VTCorsPolicy = "VTCorsPolicy";
+
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+builder.Services.AddScoped<IAuthorizationHandler,PermissionAuthorizationHandler>();
 
 builder.Services.AddCors(o => o.AddPolicy(VTCorsPolicy, builder =>
 {
