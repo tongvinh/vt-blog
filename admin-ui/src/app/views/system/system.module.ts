@@ -16,6 +16,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { VTSharedModule } from '../../shared/modules/vt-shared.module';
 import { RoleDetailComponent } from './roles/role-detail.component';
 import { KeyFilterModule } from 'primeng/keyfilter';
+import { PermissionGrantComponent } from './roles/permission-grant.component';
 
 @NgModule({
   imports: [
@@ -34,6 +35,6 @@ import { KeyFilterModule } from 'primeng/keyfilter';
     SharedModule,
     VTSharedModule
   ],
-  declarations: [UserComponent, RoleComponent, RoleDetailComponent],
+  declarations: [UserComponent, RoleComponent, RoleDetailComponent, PermissionGrantComponent],
 })
 export class SystemModule { }
