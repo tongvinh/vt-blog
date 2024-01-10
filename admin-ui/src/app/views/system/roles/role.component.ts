@@ -1,9 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { AdminApiRoleApiClient, RoleDto, RoleDtoPagedResult } from 'src/app/api/admin-api.service.generated';
-import { DialogService } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogComponent } from 'primeng/dynamicdialog';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { ConfirmationService } from 'primeng/api';
+import { MessageConstants } from '../../../shared/constants/messages.constant';
+import { RoleDetailComponent } from './role-detail.component';
 
 @Component({
   selector: 'app-role',
@@ -75,7 +77,80 @@ export class RoleComponent implements OnInit, OnDestroy {
   }
 
   showPermissionModal(id: string, name: string) { }
-  showEditModal() { }
-  showAddModal() { }
-  deleteItems() { }
+  showEditModal() {
+    if (this.selectedItems.length == 0) {
+      this.alertService.showError(MessageConstants.NOT_CHOOSE_ANY_RECORD);
+      return;
+    }
+    var id = this.selectedItems[0].id;
+    const ref = this.dialogService.open(RoleDetailComponent, {
+      data: {
+        id: id,
+      },
+      header: 'cập nhật quyền',
+      width: '70%',
+    });
+
+    const dialogRef = this.dialogService.dialogComponentRefMap.get(ref);
+    const dynamicComponent = dialogRef?.instance as DynamicDialogComponent;
+    const ariaLabelledBy = dynamicComponent.getAriaLabelledBy();
+    dynamicComponent.getAriaLabelledBy = () => ariaLabelledBy;
+    ref.onClose.subscribe((data: RoleDto) => {
+      if (data) {
+        this.alertService.showSuccess(MessageConstants.UPDATED_OK_MSG);
+        this.selectedItems = [];
+        this.loadData();
+      }
+    });
+  }
+  showAddModal() {
+    const ref = this.dialogService.open(RoleDetailComponent, {
+      header: 'Thêm quyền mới',
+      width: '70%',
+    });
+    const dialogRef = this.dialogService.dialogComponentRefMap.get(ref);
+    const dynamicComponent = dialogRef?.instance as DynamicDialogComponent;
+    const ariaLabledBy = dynamicComponent.getAriaLabelledBy();
+    dynamicComponent.getAriaLabelledBy = () => ariaLabledBy;
+    ref.onClose.subscribe((data: RoleDto) => {
+      if (data) {
+        this.alertService.showSuccess(MessageConstants.CREATED_OK_MSG);
+        this.selectedItems = [];
+        this.loadData();
+      }
+    });
+  }
+  deleteItems() {
+    if (this.selectedItems.length == 0) {
+      this.alertService.showError(MessageConstants.NOT_CHOOSE_ANY_RECORD);
+      return;
+    }
+
+    var ids = [];
+    this.selectedItems.forEach((element) => {
+      ids.push(element.id);
+    });
+    this.confirmationService.confirm({
+      message: MessageConstants.CONFIRM_DELETE_MSG,
+      accept: () => {
+        this.deleteItemsConfirm(ids);
+      },
+    });
+  }
+
+  deleteItemsConfirm(ids: any[]) {
+    this.toggleBlockUI(true);
+
+    this.roleService.deleteRoles(ids).subscribe({
+      next: () => {
+        this.alertService.showSuccess(MessageConstants.DELETED_OK_MSG);
+        this.loadData();
+        this.selectedItems = [];
+        this.toggleBlockUI(false);
+      },
+      error: () => {
+        this.toggleBlockUI(false);
+      }
+    })
+  }
 }

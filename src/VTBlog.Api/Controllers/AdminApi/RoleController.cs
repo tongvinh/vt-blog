@@ -49,6 +49,21 @@ namespace VTBlog.Api.Controllers.AdminApi
             return Ok();
         }
 
+        [HttpDelete]
+        [Authorize(Permissions.Roles.Delete)]
+        public async Task<IActionResult> DeleteRoles([FromQuery] Guid[] ids)
+        {
+            foreach (var id in ids)
+            {
+                var role = await _roleManager.FindByIdAsync(id.ToString());
+                if (role == null)
+                    return NotFound();
+                await _roleManager.DeleteAsync(role);
+            }
+
+            return Ok();
+        }
+
         [HttpDelete("{id}")]
         [Authorize(Permissions.Roles.View)]
         public async Task<ActionResult<RoleDto>> GetRoleById(Guid id)

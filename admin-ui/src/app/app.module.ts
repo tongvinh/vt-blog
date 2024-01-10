@@ -41,13 +41,15 @@ import { ADMIN_API_BASE_URL, AdminApiAuthApiClient, AdminApiRoleApiClient, Admin
 import { environment } from '../environments/environment';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { DialogService } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { AlertService } from './shared/services/alert.service';
 import { ToastModule } from 'primeng/toast'
 import { TokenStorageService } from './shared/services/token-storage.service';
 import { AuthGuard } from './shared/auth.guard';
 import { TokenInterceptor } from './shared/interceptors/token.interceptor';
 import { GlobalHttpInterceptorService } from './shared/interceptors/error-handler.interceptor';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { UtilityService } from './shared/services/utility.service';
 
 const APP_CONTAINERS = [
   DefaultFooterComponent,
@@ -85,7 +87,9 @@ const APP_CONTAINERS = [
     CardModule,
     NgScrollbarModule,
     ToastModule,
-    HttpClientModule
+    HttpClientModule,
+    ConfirmDialogModule,
+    DynamicDialogModule
   ],
   providers: [
     { provide: ADMIN_API_BASE_URL, useValue: environment.API_URL },
@@ -114,7 +118,8 @@ const APP_CONTAINERS = [
     AdminApiTokenApiClient,
     AdminApiRoleApiClient,
     DialogService,
-    ConfirmationService 
+    UtilityService,
+    ConfirmationService
   ],
   bootstrap: [AppComponent]
 })
