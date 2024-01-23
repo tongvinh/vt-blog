@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using VTBlog.Core.Domain.Content;
 using VTBlog.Core.Domain.Identity;
+using VTBlog.Core.SeedWorks.Constants;
+
 // ReSharper disable All
 
 namespace VTBlog.Data
@@ -32,5 +34,19 @@ namespace VTBlog.Data
                 .HasKey(x => new {x.UserId});
         }
 
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker.Entries().Where(e => e.State == EntityState.Added);
+
+            foreach (var entityEntry in entries)
+            {
+                var dateCreatedProp = entityEntry.Entity.GetType().GetProperty(SystemConsts.DateCreatedField);
+                if (entityEntry.State == EntityState.Added & dateCreatedProp != null)
+                {
+                    dateCreatedProp.SetValue(entityEntry.Entity, DateTime.Now);
+                }
+            }
+            return base.SaveChangesAsync(cancellationToken);
+        }
     }
 }

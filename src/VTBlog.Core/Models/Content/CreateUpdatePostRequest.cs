@@ -15,6 +15,7 @@ namespace VTBlog.Core.Models.Content
 
         public required string Slug { get; set; }
 
+        [MaxLength(500)]
         public string? Description { get; set; }
 
         public string? Thumbnail { get; set; }

@@ -39,7 +39,8 @@ builder.Services.AddCors(o => o.AddPolicy(VTCorsPolicy, builder =>
 builder.Services.AddDbContext<VTBlogContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddIdentity<AppUser, AppRole>(options => options.SignIn.RequireConfirmedAccount = false)
-    .AddEntityFrameworkStores<VTBlogContext>();
+    .AddEntityFrameworkStores<VTBlogContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {

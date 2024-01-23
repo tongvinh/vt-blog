@@ -17,6 +17,13 @@ import { VTSharedModule } from '../../shared/modules/vt-shared.module';
 import { RoleDetailComponent } from './roles/role-detail.component';
 import { KeyFilterModule } from 'primeng/keyfilter';
 import { PermissionGrantComponent } from './roles/permission-grant.component';
+import { BadgeModule } from 'primeng/badge';
+import { PickListModule } from 'primeng/picklist';
+import { ImageModule } from 'primeng/image';
+import { ChangeEmailComponent } from './users/change-email.component';
+import { RoleAssignComponent } from './users/role-assign.component';
+import { SetPasswordComponent } from './users/set-password.component';
+import { UserDetailComponent } from './users/user-detail.component';
 
 @NgModule({
   imports: [
@@ -33,8 +40,20 @@ import { PermissionGrantComponent } from './roles/permission-grant.component';
     InputTextModule,
     KeyFilterModule,
     SharedModule,
-    VTSharedModule
+    VTSharedModule,
+    BadgeModule,
+    PickListModule,
+    ImageModule
   ],
-  declarations: [UserComponent, RoleComponent, RoleDetailComponent, PermissionGrantComponent],
+  declarations: [
+    UserComponent,
+    RoleComponent,
+    RoleDetailComponent,
+    PermissionGrantComponent,
+    ChangeEmailComponent,
+    RoleAssignComponent,
+    SetPasswordComponent,
+    UserDetailComponent
+  ],
 })
 export class SystemModule { }

@@ -11,6 +11,8 @@ namespace VTBlog.Data.SeedWorks
 
         public IPostRepository Posts { get; private set; } = new PostRepository(context, mapper);
 
+        public IUserRepository Users {get; private set;} = new UserRepository(context);
+
         public async Task<int> CompleteAsync()
         {
             return await _context.SaveChangesAsync();
