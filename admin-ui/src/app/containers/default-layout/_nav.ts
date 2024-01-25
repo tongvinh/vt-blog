@@ -22,7 +22,7 @@ export const navItems: INavData[] = [
         name: 'Danh mục',
         url: '/content/post-categories',
         attributes: {
-          "policyName": "Permission.PostCategories.View"
+          "policyName": "Permissions.PostCategories.View"
         }
       },
       {

@@ -13,6 +13,8 @@ namespace VTBlog.Data.SeedWorks
 
         public IUserRepository Users {get; private set;} = new UserRepository(context);
 
+        public IPostCategoryRepository PostCategories { get; private set; } = new PostCategoryRepository(context,mapper);
+
         public async Task<int> CompleteAsync()
         {
             return await _context.SaveChangesAsync();
