@@ -37,7 +37,7 @@ import {
 } from '@coreui/angular';
 
 import { IconModule, IconSetService } from '@coreui/icons-angular';
-import { ADMIN_API_BASE_URL, AdminApiAuthApiClient, AdminApiPostApiClient, AdminApiPostCategoryApiClient, AdminApiRoleApiClient, AdminApiSeriesApiClient, AdminApiTestApiClient, AdminApiTokenApiClient, AdminApiUserApiClient } from './api/admin-api.service.generated';
+import { ADMIN_API_BASE_URL, AdminApiAuthApiClient, AdminApiPostApiClient, AdminApiPostCategoryApiClient, AdminApiRoleApiClient, AdminApiRoyaltyApiClient, AdminApiSeriesApiClient, AdminApiTestApiClient, AdminApiTokenApiClient, AdminApiUserApiClient } from './api/admin-api.service.generated';
 import { environment } from '../environments/environment';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -125,7 +125,8 @@ const APP_CONTAINERS = [
     DialogService,
     UtilityService,
     ConfirmationService,
-    UploadService
+    UploadService,
+    AdminApiRoyaltyApiClient 
   ],
   bootstrap: [AppComponent]
 })

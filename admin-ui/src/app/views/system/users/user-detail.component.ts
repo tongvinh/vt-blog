@@ -215,7 +215,8 @@ export class UserDetailComponent implements OnInit, OnDestroy {
       dob: new FormControl(this.selectedEntity.dob ? formatDate(this.selectedEntity.dob, 'yyyy-MM-dd', 'en') : null),
       avatarFile: new FormControl(null),
       avatar: new FormControl(this.selectedEntity.avatar || null),
-      isActive: new FormControl(this.selectedEntity.isActive || null)
+      isActive: new FormControl(this.selectedEntity.isActive || null),
+      royaltyAmountPerPost: new FormControl(this.selectedEntity.royaltyAmountPerPost)
     });
   }
 }

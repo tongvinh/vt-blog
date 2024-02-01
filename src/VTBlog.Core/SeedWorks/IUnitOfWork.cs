@@ -8,6 +8,8 @@ namespace VTBlog.Core.SeedWorks
         IPostCategoryRepository PostCategories { get; }
         IUserRepository Users { get; }
         ISeriesRepository Series { get; }
+        ITransactionRepository Transaction { get; }
+
         Task<int> CompleteAsync();
     }
 }

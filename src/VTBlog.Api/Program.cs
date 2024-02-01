@@ -15,9 +15,11 @@ using VTBlog.Core.ConfigOptions;
 using VTBlog.Core.Domain.Identity;
 using VTBlog.Core.Models.Content;
 using VTBlog.Core.SeedWorks;
+using VTBlog.Core.Services;
 using VTBlog.Data;
 using VTBlog.Data.Repositories;
 using VTBlog.Data.SeedWorks;
+using VTBlog.Data.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -94,6 +96,7 @@ builder.Services.AddScoped<SignInManager<AppUser>, SignInManager<AppUser>>();
 builder.Services.AddScoped<UserManager<AppUser>, UserManager<AppUser>>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<RoleManager<AppRole>, RoleManager<AppRole>>();
+builder.Services.AddScoped<IRoyaltyService, RoyaltyService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

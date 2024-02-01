@@ -20,6 +20,8 @@ namespace VTBlog.Data.SeedWorks
 
         public ISeriesRepository Series { get; private set; } = new SeriesRepository(context, mapper);
 
+        public ITransactionRepository Transaction { get; private set; } = new TransactionRepository(context, mapper);
+
         public async Task<int> CompleteAsync()
         {
             return await _context.SaveChangesAsync();

@@ -40,8 +40,15 @@ export const navItems: INavData[] = [
         }
       },
       {
-        name: 'Nhuận bút',
-        url: '/content/royalty',
+        name: 'Thống kê tác giả',
+        url: '/royalty/royalty-user',
+        attributes: {
+          "policyName": "Permissions.Royalty.View"
+        }
+      },
+      {
+        name: 'Giao dịch',
+        url: '/royalty/transactions',
         attributes: {
           "policyName": "Permissions.Royalty.View"
         }
