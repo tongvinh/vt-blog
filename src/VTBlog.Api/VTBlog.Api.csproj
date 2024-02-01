@@ -22,4 +22,8 @@
     <ProjectReference Include="..\VTBlog.Data\VTBlog.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>

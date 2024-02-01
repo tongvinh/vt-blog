@@ -11,17 +11,21 @@ namespace VTBlog.Core.SeedWorks.Constants
     {
         public static class Dashboard
         {
-            [Description("Xem dashboard")] 
+            [Description("Xem dashboard")]
             public const string View = "Permissions.Dashboard.View";
         }
         public static class Roles
         {
-            [Description("Xem quyền")] public const string View = "Permissions.Roles.View";
-            [Description("Tạo mới quyền")] public const string Create = "Permission.Roles.Create";
-            [Description("Sửa quyền")] public const string Edit = "Permission.Roles.Edit";
-            [Description("Xoá quyền")] public const string Delete = "Permission.Roles.Delete";
+            [Description("Xem quyền")]
+            public const string View = "Permissions.Roles.View";
+            [Description("Tạo mới quyền")]
+            public const string Create = "Permissions.Roles.Create";
+            [Description("Sửa quyền")]
+            public const string Edit = "Permissions.Roles.Edit";
+            [Description("Xóa quyền")]
+            public const string Delete = "Permissions.Roles.Delete";
         }
-         public static class Users
+        public static class Users
         {
             [Description("Xem người dùng")]
             public const string View = "Permissions.Users.View";
@@ -53,6 +57,8 @@ namespace VTBlog.Core.SeedWorks.Constants
             public const string Edit = "Permissions.Posts.Edit";
             [Description("Xóa bài viết")]
             public const string Delete = "Permissions.Posts.Delete";
+            [Description("Duyệt bài viết")]
+            public const string Approve = "Permissions.Posts.Approve";
         }
 
         public static class Series
