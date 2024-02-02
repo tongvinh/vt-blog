@@ -32,22 +32,22 @@ namespace VTBlog.Api.Controllers.AdminApi
         [HttpGet]
         [Route("Royalty-report-by-user")]
         [Authorize(Permissions.Royalty.View)]
-        public async Task<ActionResult<List<RoyaltyReportByUserDto>>> GetRoyaltyReportByUser(Guid? userId,
+        public async Task<ActionResult<List<RoyaltyReportByUserDto>>> GetRoyaltyReportByUser(string? userName,
             int fromMonth, int fromYear, int toMonth, int toYear)
         {
             var result =
-                await _royaltyService.GetRoyaltyReportByUserAsync(userId, fromMonth, fromYear, toMonth, toYear);
+                await _royaltyService.GetRoyaltyReportByUserAsync(userName, fromMonth, fromYear, toMonth, toYear);
             return Ok(result);
         }
 
         [HttpGet]
         [Route("Royalty-report-by-month")]
         [Authorize(Permissions.Royalty.View)]
-        public async Task<ActionResult<List<RoyaltyReportByMonthDto>>> GetRoyaltyReportByMonth(Guid? userId, int fromMonth,
+        public async Task<ActionResult<List<RoyaltyReportByMonthDto>>> GetRoyaltyReportByMonth(string? userName, int fromMonth,
             int fromYear, int toMonth, int toYear)
         {
             var result =
-                await _royaltyService.GetRoyaltyReportByMonthAsync(userId, fromMonth, fromYear, toMonth, toYear);
+                await _royaltyService.GetRoyaltyReportByMonthAsync(userName, fromMonth, fromYear, toMonth, toYear);
             return Ok(result);
         }
 

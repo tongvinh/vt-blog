@@ -16,7 +16,7 @@ namespace VTBlog.Data.Services
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IConfiguration _configuration = configuration;
 
-        public async Task<List<RoyaltyReportByMonthDto>> GetRoyaltyReportByMonthAsync(Guid? userId, int fromMonth, int fromYear, int toMonth, int toYear)
+        public async Task<List<RoyaltyReportByMonthDto>> GetRoyaltyReportByMonthAsync(string? userName, int fromMonth, int fromYear, int toMonth, int toYear)
         {
             using (var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
@@ -34,23 +34,23 @@ namespace VTBlog.Data.Services
                                 group by 
                                     datepart(month,p.DateCreated),
                                     datepart(year,p.DateCreated),
-	                                p.AuthorUserId
+	                                p.AuthorUserName
                                 having 
                                     (@fromMonth = 0 or datepart(month,p.DateCreated) >= @fromMonth) 
                                     and (@fromYear = 0 or datepart(year,p.DateCreated) >= @fromYear)
                                     and (@fromYear = 0 or datepart(month,p.DateCreated) <= @toMonth)
                                     and (@toYear = 0 or datepart(year,p.DateCreated) <= @toYear)
-                                    and (@userId is null or p.AuthorUserId = @userId)";
+                                    and (@userName is null or p.AuthorUserName = @userName)";
 
                 var items = await conn.QueryAsync<RoyaltyReportByMonthDto>(coreSql, new
                 {
-                    fromMonth, fromYear, toMonth, toYear, userId
+                    fromMonth, fromYear, toMonth, toYear, userName
                 }, null, 120, CommandType.Text);
                 return items.ToList();
             }
         }
 
-        public async Task<List<RoyaltyReportByUserDto>> GetRoyaltyReportByUserAsync(Guid? userId, int fromMonth, int fromYear, int toMonth, int toYear)
+        public async Task<List<RoyaltyReportByUserDto>> GetRoyaltyReportByUserAsync(string? userName, int fromMonth, int fromYear, int toMonth, int toYear)
         {
             using (var conn = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
             {
@@ -68,7 +68,7 @@ namespace VTBlog.Data.Services
                                     group by 
                                     datepart(month,p.DateCreated),
                                     datepart(year,p.DateCreated),
-                                    p.AuthorUserId,
+                                    p.AuthorUserName,
                                     u.Id,
                                     u.UserName
                                     having 
@@ -76,11 +76,11 @@ namespace VTBlog.Data.Services
                                     and (@fromYear = 0 or datepart(year,p.DateCreated) >= @fromYear)
                                     and (@fromYear = 0 or datepart(month,p.DateCreated) <= @toMonth)
                                     and (@toYear = 0 or datepart(year,p.DateCreated) <= @toYear)
-                                    and (@userId is null or p.AuthorUserId = @userId)";
+                                    and (@userName is null or p.AuthorUserName = @userName)";
 
                 var items = await conn.QueryAsync<RoyaltyReportByUserDto>(coreSql, new
                 {
-                    fromMonth, fromYear, toMonth, toYear, userId
+                    fromMonth, fromYear, toMonth, toYear, userName
                 }, null, 120, CommandType.Text);
                 return items.ToList();
             }
