@@ -86,7 +86,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   pageChanged(event: any): void {
-    this.pageIndex = event.page;
+    this.pageIndex =  + 1;
     this.pageSize = event.rows;
     this.loadData();
   }

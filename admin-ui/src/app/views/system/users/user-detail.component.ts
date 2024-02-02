@@ -52,6 +52,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
       },
     ],
     phoneNumber: [{ type: 'required', message: 'Bạn phải nhập số điện thoại' }],
+    royaltyAmountPerPost: [{ type: 'required', message: 'Bạn phải nhập nhuận bút' }],
   };
 
   ngOnInit(): void {
@@ -145,17 +146,17 @@ export class UserDetailComponent implements OnInit, OnDestroy {
             this.toggleBlockUI(false);
           }
         })
-    }else{
+    } else {
       this.userService
         .updateUser(this.config.data?.id, this.form.value)
         .pipe(takeUntil(this.ngUnsubscribe))
         .subscribe({
-          next: () =>{
+          next: () => {
             this.toggleBlockUI(false);
 
             this.ref.close(this.form.value);
           },
-          error: () =>{
+          error: () => {
             this.toggleBlockUI(false);
           }
         });
@@ -216,7 +217,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
       avatarFile: new FormControl(null),
       avatar: new FormControl(this.selectedEntity.avatar || null),
       isActive: new FormControl(this.selectedEntity.isActive || null),
-      royaltyAmountPerPost: new FormControl(this.selectedEntity.royaltyAmountPerPost)
+      royaltyAmountPerPost: new FormControl(this.selectedEntity.royaltyAmountPerPost || 0, Validators.required)
     });
   }
 }

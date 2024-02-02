@@ -56,6 +56,10 @@ namespace VTBlog.Api.Controllers.AdminApi
                 {
                     return NotFound();
                 }
+                if (await _unitOfWork.PostCategories.HasPost(id))
+                {
+                    return BadRequest("Danh mục đang chứ bài viết, không thể xoá");
+                }
                 _unitOfWork.PostCategories.Remove(post);
             }
             var result = await _unitOfWork.CompleteAsync();
