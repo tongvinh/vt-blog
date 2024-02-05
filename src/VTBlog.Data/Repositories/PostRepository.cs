@@ -107,6 +107,18 @@ namespace VTBlog.Data.Repositories
             return await _mapper.ProjectTo<SeriesInListDto>(query).ToListAsync();
         }
 
+        public async Task<PostDto> GetBySlug(string slug)
+        {
+            var post = await _context.Posts.FirstOrDefaultAsync(x => x.Slug == slug);
+            if (post == null)
+            {
+                throw new Exception($"Cannot find post with Slug: {slug}");
+            }
+
+            return _mapper.Map<PostDto>(post);
+
+        }
+
         public async Task<List<PostInListDto>> GetLatestPublishPost(int top)
         {
             var query = _context.Posts.Where(x =>x.Status == PostStatus.Published)
