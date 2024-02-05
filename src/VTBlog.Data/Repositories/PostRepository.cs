@@ -127,6 +127,30 @@ namespace VTBlog.Data.Repositories
             return _context.Posts.OrderByDescending(d =>d.ViewCount).Take(count).ToList();
         }
 
+        public async Task<PagedResult<PostInListDto>> GetPostByCategoryPaging(string categorySlug, int pageIndex = 1, int pageSize = 10)
+        {
+            var query = _context.Posts.AsQueryable();
+
+            if (!string.IsNullOrEmpty(categorySlug))
+            {
+                query = query.Where(x => x.CategorySlug == categorySlug);
+            }
+
+            var totalRow = await query.CountAsync();
+
+            query = query.OrderByDescending(x => x.DateCreated)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize);
+
+            return new PagedResult<PostInListDto>()
+            {
+                Results = await _mapper.ProjectTo<PostInListDto>(query).ToListAsync(),
+                CurrentPage = pageIndex,
+                RowCount = totalRow,
+                PageSize = pageSize
+            };
+        }
+
         public async Task<string> GetReturnReason(Guid id)
         {
             var activity = await _context.PostActivityLogs
