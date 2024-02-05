@@ -107,6 +107,15 @@ namespace VTBlog.Data.Repositories
             return await _mapper.ProjectTo<SeriesInListDto>(query).ToListAsync();
         }
 
+        public async Task<List<PostInListDto>> GetLatestPublishPost(int top)
+        {
+            var query = _context.Posts.Where(x =>x.Status == PostStatus.Published)
+                    .Take(top)
+                    .OrderByDescending(x => x.DateCreated);
+
+            return await _mapper.ProjectTo<PostInListDto>(query).ToListAsync();
+        }
+
         public async Task<List<Post>> GetListUnpaidPublishPosts(Guid userId)
         {
             return await _context.Posts.Where(x => x.AuthorUserId == userId & x.IsPaid == false
