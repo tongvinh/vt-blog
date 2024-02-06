@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using VTBlog.Core.Domain.Content;
 using VTBlog.Core.Domain.Identity;
 using VTBlog.Core.Models;
@@ -15,6 +16,15 @@ namespace VTBlog.Data.Repositories
     {
         private readonly IMapper _mapper = mapper;
         private readonly UserManager<AppUser> _userManager = userManager;
+
+        public async Task AddTagToPost(Guid postId, Guid tagId)
+        {
+            await _context.PostTags.AddAsync(new PostTag()
+            {
+                PostId = postId,
+                TagId = tagId
+            });
+        }
 
         public async Task Approve(Guid id, Guid currentUserId)
         {
@@ -107,6 +117,12 @@ namespace VTBlog.Data.Repositories
             return await _mapper.ProjectTo<SeriesInListDto>(query).ToListAsync();
         }
 
+        public async Task<List<string>> GetAllTags()
+        {
+            var query = _context.Tags.Select(x => x.Name);
+            return await query.ToListAsync();
+        }
+
         public async Task<PostDto> GetBySlug(string slug)
         {
             var post = await _context.Posts.FirstOrDefaultAsync(x => x.Slug == slug);
@@ -163,6 +179,28 @@ namespace VTBlog.Data.Repositories
             };
         }
 
+        public async Task<PagedResult<PostInListDto>> GetPostByTagPaging(string tagSlug, int pageIndex = 1, int pageSize = 10)
+        {
+            var query = from p in _context.Posts
+                join pt in _context.PostTags on p.Id equals pt.PostId
+                join t in _context.Tags on pt.TagId equals t.Id
+                where t.Slug == tagSlug
+                select p;
+            var totalRow = await query.CountAsync();
+
+            query = query.OrderByDescending(x => x.DateCreated)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize);
+
+            return new PagedResult<PostInListDto>()
+            {
+                Results = await _mapper.ProjectTo<PostInListDto>(query).ToListAsync(),
+                CurrentPage = pageIndex,
+                RowCount = totalRow,
+                PageSize = pageSize
+            };
+        }
+
         public async Task<string> GetReturnReason(Guid id)
         {
             var activity = await _context.PostActivityLogs
@@ -170,6 +208,29 @@ namespace VTBlog.Data.Repositories
                 .OrderByDescending(x => x.DateCreated)
                 .FirstOrDefaultAsync();
             return activity?.Note;
+        }
+
+        public async Task<List<TagDto>> GetTagObjectsByPostId(Guid postId)
+        {
+            var query = from p in _context.Posts
+                join pt in _context.PostTags on p.Id equals pt.PostId
+                join t in _context.Tags on pt.TagId equals t.Id
+                where pt.PostId == postId
+                select t;
+
+            var totalRow = await query.CountAsync();
+
+            return await _mapper.ProjectTo<TagDto>(query).ToListAsync();
+        }
+
+        public async Task<List<string>> GetTagsByPostId(Guid postId)
+        {
+            var query = from post in _context.Posts
+                join pt in _context.PostTags on post.Id equals pt.PostId
+                join t in _context.Tags on pt.TagId equals t.Id
+                where post.Id == postId
+                select t.Name;
+            return await query.ToListAsync();
         }
 
         public async Task<bool> HasPublishInLast(Guid id)

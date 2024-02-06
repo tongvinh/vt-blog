@@ -11,6 +11,10 @@ namespace VTBlog.Core.Domain.Content
 
         [Required]
         [MaxLength(100)]
+        public required string Slug { get; set; }
+
+        [Required]
+        [MaxLength(100)]
         public required string Name { get; set; }
     }
 }

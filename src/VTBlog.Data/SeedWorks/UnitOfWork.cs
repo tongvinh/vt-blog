@@ -22,6 +22,8 @@ namespace VTBlog.Data.SeedWorks
 
         public ITransactionRepository Transaction { get; private set; } = new TransactionRepository(context, mapper);
 
+        public ITagRepository Tags { get; private set; } = new TagRepository(mapper, context);
+
         public async Task<int> CompleteAsync()
         {
             return await _context.SaveChangesAsync();

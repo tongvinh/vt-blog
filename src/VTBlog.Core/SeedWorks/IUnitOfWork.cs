@@ -9,6 +9,7 @@ namespace VTBlog.Core.SeedWorks
         IUserRepository Users { get; }
         ISeriesRepository Series { get; }
         ITransactionRepository Transaction { get; }
+        ITagRepository Tags { get; }
 
         Task<int> CompleteAsync();
     }
