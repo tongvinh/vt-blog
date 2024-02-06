@@ -10,6 +10,7 @@ using VTBlog.Data.SeedWorks;
 using VTBlog.WebApp.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
+
 var configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("DefaultConnection");
 builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -22,6 +23,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.Configure<SystemConfig>(configuration.GetSection("SystemConfig"));
 
 builder.Services.AddDbContext<VTBlogContext>(options => options.UseSqlServer(connectionString));
+
+
+#region Configure Identity
 
 builder.Services.AddIdentity<AppUser, AppRole>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<VTBlogContext>()
@@ -47,14 +51,20 @@ builder.Services.Configure<IdentityOptions>(options =>
 });
 
 // Add services to the container.
-builder.Services.AddScoped(typeof(IRepository<,>), typeof(RepositoryBase<,>));
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-builder.Services.AddAutoMapper(typeof(PostInListDto));
 
 builder.Services.AddScoped<SignInManager<AppUser>, SignInManager<AppUser>>();
 builder.Services.AddScoped<UserManager<AppUser>, UserManager<AppUser>>();
 builder.Services.AddScoped<RoleManager<AppRole>, RoleManager<AppRole>>();
+
+builder.Services.AddScoped<IUserClaimsPrincipalFactory<AppUser>, CustomClaimsPrincipalFactory>();
+#endregion
+
+
+
+#region Configure Services
+builder.Services.AddAutoMapper(typeof(PostInListDto));
+builder.Services.AddScoped(typeof(IRepository<,>), typeof(RepositoryBase<,>));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Business services and repositories
 var services = typeof(PostRepository).Assembly.GetTypes()
@@ -71,6 +81,8 @@ foreach (var service in services)
 }
 
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<AppUser>,CustomClaimsPrincipalFactory>();
+
+#endregion
 //Start pipeline
 var app = builder.Build();
 
