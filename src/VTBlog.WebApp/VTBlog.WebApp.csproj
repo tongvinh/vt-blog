@@ -19,4 +19,8 @@
     <_ContentIncludedByDefault Remove="Views\Shared\_Footer.cshtml" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.2.0" />
+  </ItemGroup>
+
 </Project>

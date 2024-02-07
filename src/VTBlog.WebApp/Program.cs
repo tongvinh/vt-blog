@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using VTBlog.Core.ConfigOptions;
 using VTBlog.Core.Domain.Identity;
+using VTBlog.Core.Events.LoginSuccessed;
 using VTBlog.Core.Models.Content;
 using VTBlog.Core.SeedWorks;
 using VTBlog.Data;
@@ -63,6 +64,7 @@ builder.Services.AddScoped<IUserClaimsPrincipalFactory<AppUser>, CustomClaimsPri
 
 #region Configure Services
 builder.Services.AddAutoMapper(typeof(PostInListDto));
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(LoginSuccessedEvent).Assembly));
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(RepositoryBase<,>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
