@@ -9,6 +9,7 @@ using VTBlog.Data;
 using VTBlog.Data.Repositories;
 using VTBlog.Data.SeedWorks;
 using VTBlog.WebApp.Helpers;
+using VTBlog.WebApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,7 @@ builder.Services.AddControllersWithViews();
 
 //Custom setup
 builder.Services.Configure<SystemConfig>(configuration.GetSection("SystemConfig"));
+builder.Services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
 
 builder.Services.AddDbContext<VTBlogContext>(options => options.UseSqlServer(connectionString));
 
@@ -67,6 +69,7 @@ builder.Services.AddAutoMapper(typeof(PostInListDto));
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(LoginSuccessedEvent).Assembly));
 builder.Services.AddScoped(typeof(IRepository<,>), typeof(RepositoryBase<,>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 // Business services and repositories
 var services = typeof(PostRepository).Assembly.GetTypes()
