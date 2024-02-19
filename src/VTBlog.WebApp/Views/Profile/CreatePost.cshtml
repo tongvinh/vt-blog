@@ -1,0 +1,81 @@
+﻿@{
+    ViewData["Title"] = "Create new post";
+    ViewData["Description"] = "Create new post";
+
+}
+@section Scripts
+{
+    <!-- Place the first <script> tag in your HTML's <head> -->
+    <script src="https://cdn.tiny.cloud/1/592trnjm64sptotf39zgp7zb8f48go7gq40cygllkkjd8unw/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <!-- Place the following <script> and <textarea> tags your HTML's <body> -->
+    <script>
+  tinymce.init({
+    selector: 'textarea',
+    plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+  });
+</script>
+}
+@model CreatePostViewModel
+<!-- Page Header-->
+<header class="masthead" style="background-image: url('/assets/img/home-bg.jpg')">
+    <div class="container position-relative px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div class="site-heading">
+                    <h1>Create new post</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Main Content-->
+<div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+            <form asp-action="CreatePost" asp-controller="Profile" method="post" enctype="multipart/form-data">
+                <div class="alert alert-danger" asp-validation-summary="ModelOnly"></div>
+                @if (TempData[SystemConsts.FormSuccessMsg] != null)
+                {
+                    <div class="alert alert-success">@TempData[SystemConsts.FormSuccessMsg]</div>
+                }
+                <div class="col-md-12">
+                    <label for="firstName" class="form-label">Title</label>
+                    <input type="text" class="form-control" asp-for="Title" id="Title" required>
+                    <span asp-validation-for="Title" class="invalid-feedback"></span>
+                </div>
+                <div class="col-md-12">
+                    <label for="firstName" class="form-label">Description</label>
+                    <input type="text" class="form-control" asp-for="Description" id="Description" required>
+                    <span asp-validation-for="Description" class="invalid-feedback"></span>
+                </div>
+                <div class="col-md-12">
+                    <label asp-for="CategoryId" class="form-label">Category</label>
+                    <select asp-for="CategoryId" class="form-control" asp-items="Model.Categories">
+                        <option>Please select category</option>
+                    </select>
+                    <span asp-validation-for="CategoryId" class="invalid-feedback"></span>
+
+                </div>
+                <div class="col-md-12">
+                    <label for="lastName" class="form-label">Thumbnail</label>
+                    <input type="file" class="form-control" name="thumbnail" id="thumbnail" required>
+                    <input type="hidden" asp-for="ThumbnailImage" />
+                </div>
+                <div class="col-md-6">
+                    <label for="firstName" class="form-label">SEO Description</label>
+                    <textarea class="form-control" asp-for="SeoDescription" id="SeoDescription" rows="5"></textarea>
+                </div>
+                <div class="col-md-12">
+                    <label for="firstName" class="form-label">Content</label>
+                    <textarea class="form-control" asp-for="Content" id="txtContent"></textarea>
+                </div>
+                <div class="col-12 mt-3">
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                    <a href="@UrlConsts.PostListByUser">Back to list</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

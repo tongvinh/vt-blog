@@ -2,16 +2,17 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using VTBlog.Core.ConfigOptions;
 
 namespace VTBlog.Api.Controllers.AdminApi
 {
     [Route("api/admin/media")]
     [ApiController]
-    public class MediaController(IWebHostEnvironment hostingEnv, MediaSettings settings) : ControllerBase
+    public class MediaController(IWebHostEnvironment hostingEnv, IOptions<MediaSettings> settings) : ControllerBase
     {
         private readonly IWebHostEnvironment _hostingEnv = hostingEnv;
-        private readonly MediaSettings _settings = settings;
+        private readonly MediaSettings _settings = settings.Value;
 
         [HttpPost]
         [AllowAnonymous]
@@ -41,7 +42,7 @@ namespace VTBlog.Api.Controllers.AdminApi
             {
                 Directory.CreateDirectory(folder);
             }
-            var filePath = Path.Combine(folder, imageFolder);
+            var filePath = Path.Combine(folder, fileName);
             using (var fs = global::System.IO.File.Create(filePath))
             {
                 file.CopyTo(fs);
