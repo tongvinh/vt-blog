@@ -1,4 +1,6 @@
-﻿namespace VTBlog.WebApp.Services
+﻿using VTBlog.WebApp.Models;
+
+namespace VTBlog.WebApp.Services
 {
     public interface IEmailSender
     {

@@ -10,8 +10,8 @@ namespace VTBlog.WebApp.Extensions
             return urlHelper.Action(
                 action: nameof(AuthController.ResetPassword),
                 controller: "Auth",
-                values: new { userId, code },
-                protocol: scheme)
+                values: new {userId, code},
+                protocol: scheme);
         }
     }
 }

@@ -59,6 +59,9 @@ builder.Services.AddScoped<SignInManager<AppUser>, SignInManager<AppUser>>();
 builder.Services.AddScoped<UserManager<AppUser>, UserManager<AppUser>>();
 builder.Services.AddScoped<RoleManager<AppRole>, RoleManager<AppRole>>();
 
+builder.Services.AddSingleton<SystemConfig>();
+builder.Services.AddSingleton<IEmailSender, EmailSender>();
+
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<AppUser>, CustomClaimsPrincipalFactory>();
 #endregion
 
